@@ -30,20 +30,17 @@ jobs:
         submodules: true
     - name: Prepare
       shell: bash
-      env:
       run: |
         cp -r rpm libchewing
         patch libchewing/doc/CMakeLists.txt libchewing/rpm/0001-skip-chewing-cli-doc.patch
         cd libchewing
     - name: Build ${{ matrix.arch }}
-      id: build_${{ matrix.arch }}
       uses: coderus/github-sfos-build@sfos5
       with:
         release: ${{ env.RELEASE }}
         arch: ${{ matrix.arch }}
     - name: Check Result
       shell: bash
-      env:
       run: |
         echo $(pwd)
         ls -ltra

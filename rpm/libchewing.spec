@@ -1,12 +1,11 @@
-%bcond_with dynamic
+%bcond_with static
 Name:           libchewing
-%define soname	3
 Version:        0.8.5
 Release:        0
 Summary:        Intelligent Phonetic Input Method Library for Traditional Chinese
 License:        LGPL-2.1-or-later
 URL:            https://codeberg.org/chewing/libchewing
-Source0:        %{name}-%{version}.tar.zst
+Source0:        https://codeberg.org/chewing/libchewing/releases/download/v%{version}/%{name}-%{version}.tar.zst
 
 Patch0:         0001-skip-chewing-cli-doc.patch
 
@@ -22,23 +21,14 @@ Intelligent phonetic input method library for traditional Chinese.
 %package devel
 Summary:        Development package for libchewing
 Group:          Development/Libraries/C and C++
-Requires:       %{name}%{soname} = %{version}
+Requires:       %{name} = %{version}
 
 %description devel
 Development package for libchewing.
 
-%package -n %{name}%{soname}
-Summary:        Chewing libraries
-Group:          System/Libraries
-Requires:       chewing-data
-
-%description -n %{name}%{soname}
-This package contains libraries for Chewing.
-
 %package -n chewing-data
 Summary:        Data for libchewing
 Group:          System/I18n/Chinese
-BuildArch:      noarch
 
 %description -n chewing-data
 This package contains data files for libchewing.
@@ -47,10 +37,10 @@ This package contains data files for libchewing.
 %autosetup -p1 -n %{name}-%{version}
 
 %build
-%if %{with dynamic}
-cmake --preset c99-release --install-prefix %{_prefix}
-%else
+%if %{with static}
 cmake --preset c99-release --install-prefix %{_prefix} -DBUILD_SHARED_LIBS=OFF
+%else
+cmake --preset c99-release --install-prefix %{_prefix}
 %endif
 cmake --build build
 
@@ -62,17 +52,17 @@ cmake --install build --prefix %{buildroot}%{_prefix}
 
 %fdupes %{buildroot}%{_includedir}
 
-%if %{with dynamic}
-%post -n %{name}%{soname} -p /sbin/ldconfig
+%if %{without static}
+%post -n %{name} -p /sbin/ldconfig
 
-%postun -n %{name}%{soname} -p /sbin/ldconfig
+%postun -n %{name} -p /sbin/ldconfig
 %endif
 
-%files -n %{name}%{soname}
-%if %{with dynamic}
-%{_libdir}/libchewing.so.*
-%else
+%files
+%if %{with static}
 %{_libdir}/libchewing.a
+%else
+%{_libdir}/libchewing.so.*
 %endif
 
 %files -n chewing-data
@@ -80,10 +70,10 @@ cmake --install build --prefix %{buildroot}%{_prefix}
 
 %files devel
 %{_includedir}/chewing/
-%if %{with dynamic}
-%{_libdir}/libchewing.so
-%else
+%if %{with static}
 %{_libdir}/libchewing.a
+%else
+%{_libdir}/libchewing.so
 %endif
 %{_libdir}/pkgconfig/chewing.pc
 

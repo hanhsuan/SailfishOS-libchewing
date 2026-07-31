@@ -1,0 +1,20 @@
+diff --git a/doc/CMakeLists.txt b/doc/CMakeLists.txt
+index 4c028d6f..41a00296 100644
+--- a/doc/CMakeLists.txt
++++ b/doc/CMakeLists.txt
+@@ -18,7 +18,7 @@ if(BUILD_INFO AND MAKEINFO)
+     install(FILES ${INFO_BIN} TYPE INFO)
+ endif()
+ 
+-if(UNIX)
++if(UNIX AND WITH_RUST)
+ set(MANPAGES
+     chewing-cli.1
+     chewing-cli-init-database.1
+@@ -35,4 +35,4 @@ foreach(man ${MANPAGES})
+         DESTINATION "${CMAKE_INSTALL_MANDIR}/man1"
+     )
+ endforeach()
+-endif()
+\ No newline at end of file
++endif()

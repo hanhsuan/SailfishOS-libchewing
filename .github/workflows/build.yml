@@ -1,0 +1,49 @@
+name: Build rpm package
+
+on:
+  push:
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        type: string
+        description: 'The release tag defined in https://hub.docker.com/r/coderus/sailfishos-platform-sdk/tags'
+        required: true
+
+env:
+  RELEASE: ${{ github.event.inputs.release_tag || '5.2.0.15' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: ["armv7hl", "aarch64", "i486"]
+
+    steps:
+    - uses: actions/checkout@v6
+      with:
+        submodules: true
+    - name: Prepare
+      shell: bash
+      env:
+      run: |
+        cp -r rpm libchewing
+        patch libchewing/doc/CMakeLists.txt libchewing/rpm/0001-skip-chewing-cli-doc.patch
+        cd libchewing
+    - name: Build ${{ matrix.arch }}
+      id: build_${{ matrix.arch }}
+      uses: coderus/github-sfos-build@sfos5
+      with:
+        release: ${{ env.RELEASE }}
+        arch: ${{ matrix.arch }}
+    - name: Check Result
+      shell: bash
+      env:
+      run: |
+        echo $(pwd)
+        ls -ltra

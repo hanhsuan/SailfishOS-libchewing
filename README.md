@@ -29,7 +29,7 @@ for static library
 cd libchewing
 
 # Build static library only
-sfdk build
+sfdk build -- --with static
 ```
 
 for shared library
@@ -38,8 +38,13 @@ for shared library
 cd libchewing
 
 # Build shared library only
-sfdk build -- --with dynamic
+sfdk build
 ```
 
-## **TOOD** Github action
-There are some issues to use the [action](https://github.com/CODeRUS/github-sfos-build) made by [CODeRUS](https://github.com/CODeRUS) for this project.
+## Github action
+
+### Note
+
+- To use this [action](https://github.com/CODeRUS/github-sfos-build) made by [CODeRUS](https://github.com/CODeRUS), all files should be located in ${GITHUB_WORKSPACE} to make [script](https://github.com/CODeRUS/github-sfos-build/blob/67702884a1b192d1dfdb2fc5ec6e908e9e274855/build.sh#L10) working.
+
+- Use of the prebuilt packages in this repository is at the user’s own risk.

@@ -26,13 +26,6 @@ Requires:       %{name} = %{version}
 %description devel
 Development package for libchewing.
 
-%package -n chewing-data
-Summary:        Data for libchewing
-Group:          System/I18n/Chinese
-
-%description -n chewing-data
-This package contains data files for libchewing.
-
 %prep
 %autosetup -p1 -n %{name}-%{version}
 
@@ -64,8 +57,6 @@ cmake --install build --prefix %{buildroot}%{_prefix}
 %else
 %{_libdir}/libchewing.so.*
 %endif
-
-%files -n chewing-data
 %{_datadir}/%{name}/
 
 %files devel
@@ -76,6 +67,7 @@ cmake --install build --prefix %{buildroot}%{_prefix}
 %{_libdir}/libchewing.so
 %endif
 %{_libdir}/pkgconfig/chewing.pc
+%{_datadir}/%{name}/
 
 %changelog
 
